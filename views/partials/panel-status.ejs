@@ -1,0 +1,21 @@
+<div class="space-y-1.5">
+  <% sites.forEach(site => { %>
+    <div class="flex items-center justify-between py-1.5 px-2 rounded hover:bg-bg-elevated/50 transition-colors">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span class="status-dot <%= site.ok ? 'status-dot-ok' : (site.error === 'Timeout' ? 'status-dot-warning' : 'status-dot-error') %>">
+          <span class="sr-only"><%= site.ok ? 'Online' : (site.error === 'Timeout' ? 'Timeout' : 'Offline') %></span>
+        </span>
+        <a href="<%= site.url %>" target="_blank" rel="noopener" class="text-sm text-fg hover:text-primary truncate transition-colors">
+          <%= site.name %>
+        </a>
+      </div>
+      <div class="flex items-center gap-3 shrink-0 text-xs">
+        <% if (site.ok) { %>
+          <span class="text-fg-faint"><%= site.latency %>ms</span>
+        <% } else { %>
+          <span class="text-error"><%= site.error || site.status %></span>
+        <% } %>
+      </div>
+    </div>
+  <% }) %>
+</div>

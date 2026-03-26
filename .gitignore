@@ -1,0 +1,6 @@
+node_modules/
+public/css/dist/
+public/vendor/
+.env
+.claude/
+tmp/

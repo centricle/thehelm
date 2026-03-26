@@ -1,0 +1,7 @@
+node_modules
+public/css/dist
+public/vendor
+.git
+.env
+.claude
+tmp

@@ -1,0 +1,72 @@
+<% if (isDemoMode) { %>
+<div class="mb-6 bg-warning/10 border border-warning/20 rounded-lg px-4 py-3 text-sm text-warning">
+  You're viewing the demo with fake ACME Corp data. <a href="https://github.com/centricle/thehelm" class="underline hover:text-fg">Clone the repo</a> and add your own API tokens to see your real fleet.
+</div>
+<% } %>
+
+<h1 class="sr-only">Dashboard</h1>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+  <!-- Site Status -->
+  <div class="card" hx-ext="sse" sse-connect="/api/stream">
+    <div class="panel-header">
+      <h2 class="panel-title">Site Status</h2>
+      <div class="htmx-indicator">
+        <div class="spinner"></div>
+      </div>
+    </div>
+    <div sse-swap="status">
+      <%- include('../partials/loading') %>
+    </div>
+  </div>
+
+  <!-- Recent Deploys -->
+  <div class="card">
+    <div class="panel-header">
+      <h2 class="panel-title">Recent Deploys</h2>
+      <div class="htmx-indicator">
+        <div class="spinner"></div>
+      </div>
+    </div>
+    <div hx-get="/api/deploys"
+         hx-trigger="load, every 60s"
+         hx-swap="innerHTML"
+         hx-indicator="closest .card">
+      <%- include('../partials/loading') %>
+    </div>
+  </div>
+
+  <!-- Supabase Projects -->
+  <div class="card">
+    <div class="panel-header">
+      <h2 class="panel-title">Supabase Projects</h2>
+      <div class="htmx-indicator">
+        <div class="spinner"></div>
+      </div>
+    </div>
+    <div hx-get="/api/projects"
+         hx-trigger="load, every 60s"
+         hx-swap="innerHTML"
+         hx-indicator="closest .card">
+      <%- include('../partials/loading') %>
+    </div>
+  </div>
+
+  <!-- Git Activity -->
+  <div class="card">
+    <div class="panel-header">
+      <h2 class="panel-title">Git Activity</h2>
+      <div class="htmx-indicator">
+        <div class="spinner"></div>
+      </div>
+    </div>
+    <div hx-get="/api/git"
+         hx-trigger="load, every 60s"
+         hx-swap="innerHTML"
+         hx-indicator="closest .card">
+      <%- include('../partials/loading') %>
+    </div>
+  </div>
+
+</div>

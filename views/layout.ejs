@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' — ' : '' %>The Helm</title>
+  <meta name="description" content="Open-source fleet dashboard for indie developers who run multiple sites.">
+  <meta property="og:title" content="The Helm — Fleet Dashboard for Indie Developers">
+  <meta property="og:description" content="Open-source fleet dashboard for indie developers who run multiple sites.">
+  <meta property="og:image" content="https://thehelm.fyi/og-image.webp">
+  <meta property="og:url" content="https://thehelm.fyi">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/dist/app.css">
+  <script src="/vendor/htmx.min.js"></script>
+  <script src="/vendor/htmx-ext-sse.js"></script>
+</head>
+<body class="bg-bg-deep text-fg min-h-screen">
+  <!-- SVG filter: turbulence displaces the straight gradient lines into organic meanders -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0">
+    <defs>
+      <filter id="chart-warp" x="-5%" y="-5%" width="110%" height="110%">
+        <!-- Small-scale organic meander -->
+        <feTurbulence type="turbulence" baseFrequency="0.012" numOctaves="4" seed="42" result="meander"/>
+        <feDisplacementMap in="SourceGraphic" in2="meander" scale="30" xChannelSelector="R" yChannelSelector="G" result="meandered"/>
+        <!-- Large-scale upward bow — G channel biased below 0.5 = always pushes up -->
+        <feTurbulence type="turbulence" baseFrequency="0.002" numOctaves="1" seed="7" result="bow"/>
+        <feComponentTransfer in="bow" result="bowBias">
+          <feFuncR type="identity"/>
+          <feFuncG type="linear" slope="0.35" intercept="0.55"/>
+        </feComponentTransfer>
+        <feDisplacementMap in="meandered" in2="bowBias" scale="50" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+  <div id="grain"></div>
+  <%- include('partials/nav') %>
+  <main class="max-w-7xl mx-auto px-4 py-6">
+    <%- body %>
+  </main>
+  <script>
+    // Mobile nav toggle
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('open');
+        const expanded = mobileMenu.classList.contains('open');
+        menuBtn.setAttribute('aria-expanded', expanded);
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+          mobileMenu.classList.remove('open');
+          menuBtn.setAttribute('aria-expanded', 'false');
+          menuBtn.focus();
+        }
+      });
+      document.addEventListener('click', (e) => {
+        if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+          mobileMenu.classList.remove('open');
+          menuBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    // Card tuner: append ?tuner to any URL
+    (function() {
+      if (!location.search.includes('tuner')) return;
+
+      // Current values from CSS
+      var cfg = {
+        surfaceL: 0.19, surfaceC: 0.020, surfaceH: 229,
+        borderL: 0.27, borderC: 0.035, borderH: 229,
+        surfaceAlpha: 1.0
+      };
+
+      function apply() {
+        var surface = 'oklch(' + cfg.surfaceL + ' ' + cfg.surfaceC + ' ' + cfg.surfaceH + ' / ' + cfg.surfaceAlpha + ')';
+        var border = 'oklch(' + cfg.borderL + ' ' + cfg.borderC + ' ' + cfg.borderH + ')';
+        document.querySelectorAll('.card').forEach(function(c) {
+          c.style.backgroundColor = surface;
+          c.style.borderColor = border;
+        });
+      }
+
+      var s = function(id, label, min, max, step, val, fmt) {
+        var sv = (val / step).toFixed(0);
+        return '<label style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin:4px 0">' +
+          label + ' <input type="range" id="' + id + '" min="' + (min/step) + '" max="' + (max/step) + '" value="' + sv + '" style="width:100px">' +
+          '<span id="' + id + '-v">' + fmt(val) + '</span></label>';
+      };
+      var f2 = function(v) { return v.toFixed(2); };
+      var f3 = function(v) { return v.toFixed(3); };
+      var fi = function(v) { return Math.round(v); };
+
+      var p = document.createElement('div');
+      p.innerHTML = [
+        '<div style="position:fixed;bottom:16px;right:16px;background:rgba(0,0,0,0.92);color:#fff;padding:16px;border-radius:8px;font:13px/1.6 monospace;z-index:9999;min-width:340px;max-height:90vh;overflow-y:auto">',
+        '<b style="border-bottom:1px solid rgba(255,255,255,0.2);display:block;padding-bottom:8px;margin-bottom:8px">Card Tuner</b>',
+        '<div style="border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:6px;padding-bottom:4px"><b style="font-size:11px;color:rgba(255,255,255,0.5)">SURFACE</b></div>',
+        s('c-sl', 'Lightness', 0.05, 0.40, 0.01, cfg.surfaceL, f2),
+        s('c-sc', 'Chroma', 0, 0.10, 0.001, cfg.surfaceC, f3),
+        s('c-sh', 'Hue', 190, 260, 1, cfg.surfaceH, fi),
+        s('c-sa', 'Opacity', 0.3, 1.0, 0.01, cfg.surfaceAlpha, f2),
+        '<div style="border-top:1px solid rgba(255,255,255,0.1);margin:8px 0;padding-top:8px"><b style="font-size:11px;color:rgba(255,255,255,0.5)">BORDER</b></div>',
+        s('c-bl', 'Lightness', 0.10, 0.50, 0.01, cfg.borderL, f2),
+        s('c-bc', 'Chroma', 0, 0.10, 0.001, cfg.borderC, f3),
+        s('c-bh', 'Hue', 190, 260, 1, cfg.borderH, fi),
+        '<div style="font-size:11px;color:rgba(255,255,255,0.4);border-top:1px solid rgba(255,255,255,0.15);margin-top:8px;padding-top:8px">Dial values, then tell Claude to bake them in</div>',
+        '</div>'
+      ].join('');
+      document.body.appendChild(p);
+
+      function bind(id, key, step, fmt) {
+        document.getElementById(id).oninput = function(e) {
+          cfg[key] = +e.target.value * step;
+          document.getElementById(id + '-v').textContent = fmt(cfg[key]);
+          apply();
+        };
+      }
+      bind('c-sl', 'surfaceL', 0.01, f2);
+      bind('c-sc', 'surfaceC', 0.001, f3);
+      bind('c-sh', 'surfaceH', 1, fi);
+      bind('c-sa', 'surfaceAlpha', 0.01, f2);
+      bind('c-bl', 'borderL', 0.01, f2);
+      bind('c-bc', 'borderC', 0.001, f3);
+      bind('c-bh', 'borderH', 1, fi);
+
+      apply();
+    })();
+  </script>
+</body>
+</html>

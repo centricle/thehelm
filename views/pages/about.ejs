@@ -1,0 +1,43 @@
+<div class="max-w-2xl mx-auto space-y-8">
+  <div class="space-y-4">
+    <h1 class="text-2xl font-bold text-fg">Why this exists</h1>
+    <p class="text-fg-muted leading-relaxed">
+      I run 20+ sites. Static sites, fullstack apps, databases, domains. Every morning I'd open
+      Netlify, then Supabase, then GitHub, then curl a few URLs to make sure nothing was down.
+      Three dashboards and a terminal just to answer "is everything okay?"
+    </p>
+    <p class="text-fg-muted leading-relaxed">
+      The Helm puts it all on one screen. Four panels, auto-refreshing, no client-side JavaScript
+      framework. It's built with HTMX because the server already knows everything — why send JSON
+      to the browser just to template it again?
+    </p>
+  </div>
+
+  <div class="space-y-4">
+    <h2 class="text-lg font-semibold text-fg">What it does</h2>
+    <p class="text-fg-muted leading-relaxed">
+      Monitors site uptime (HTTP HEAD checks), recent deploys (Netlify API), database projects
+      (Supabase Management API), and git activity (GitHub GraphQL). Everything refreshes every 60
+      seconds. SSE pushes status changes in real time.
+    </p>
+  </div>
+
+  <div class="space-y-4">
+    <h2 class="text-lg font-semibold text-fg">How it works</h2>
+    <p class="text-fg-muted leading-relaxed">
+      Clone the repo. Add your API tokens to <code class="text-primary font-mono text-sm">.env</code>.
+      Run <code class="text-primary font-mono text-sm">npm start</code>. That's it. No database,
+      no auth, no build step. Express renders HTML fragments, HTMX swaps them into the page.
+      Your tokens never leave your machine.
+    </p>
+  </div>
+
+  <div class="border-t border-border pt-6 space-y-2">
+    <p class="text-sm text-fg-muted">
+      Built by <a href="https://centricle.com" class="text-primary hover:text-primary-hover transition-colors">ksmith</a>.
+    </p>
+    <p class="text-sm text-fg-faint">
+      No ads. No tracking. No hosted service. MIT licensed.
+    </p>
+  </div>
+</div>

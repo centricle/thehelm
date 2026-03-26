@@ -1,0 +1,23 @@
+<div class="space-y-1.5">
+  <% repos.forEach(repo => { %>
+    <div class="flex items-center justify-between py-1.5 px-2 rounded hover:bg-bg-elevated/50 transition-colors">
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-fg truncate"><%= repo.name %></span>
+          <% if (repo.openIssues > 0) { %>
+            <span class="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-warning/15 text-warning text-xs font-medium"><%= repo.openIssues %></span>
+          <% } %>
+        </div>
+        <% if (repo.latestCommit) { %>
+          <div class="text-xs text-fg-faint mt-0.5 truncate">
+            <code class="text-primary-muted"><%= repo.latestCommit.sha %></code>
+            <span class="ml-1"><%= (repo.latestCommit.message || '').split('\n')[0] %></span>
+          </div>
+        <% } %>
+      </div>
+      <div class="text-xs shrink-0 ml-3 <%= stalenessClass(repo.pushedAt) %>">
+        <%= formatRelative(repo.pushedAt) %>
+      </div>
+    </div>
+  <% }) %>
+</div>

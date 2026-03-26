@@ -1,0 +1,46 @@
+{
+  "name": "thehelm",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Open-source fleet dashboard for indie developers. HTMX + Express + EJS.",
+  "scripts": {
+    "prestart": "npx @tailwindcss/cli -i public/css/app.css -o public/css/dist/app.css --minify",
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "css": "npx @tailwindcss/cli -i public/css/app.css -o public/css/dist/app.css --watch",
+    "css:build": "npx @tailwindcss/cli -i public/css/app.css -o public/css/dist/app.css --minify",
+    "copy-vendor": "node scripts/copy-vendor.js",
+    "postinstall": "node scripts/copy-vendor.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "ejs": "^3.1.10"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "htmx.org": "^2.0.8",
+    "htmx-ext-sse": "^2.2.4"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/centricle/thehelm.git"
+  },
+  "homepage": "https://thehelm.fyi",
+  "bugs": {
+    "url": "https://github.com/centricle/thehelm/issues"
+  },
+  "author": "ksmith <ksmith@centricle.com> (https://centricle.com)",
+  "keywords": [
+    "dashboard",
+    "fleet",
+    "htmx",
+    "express",
+    "monitoring",
+    "sse",
+    "ejs"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

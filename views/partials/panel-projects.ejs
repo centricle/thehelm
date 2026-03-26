@@ -1,0 +1,18 @@
+<div class="space-y-1.5">
+  <% projects.forEach(project => { %>
+    <div class="flex items-center justify-between py-1.5 px-2 rounded hover:bg-bg-elevated/50 transition-colors">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span class="status-dot <%= project.status === 'ACTIVE_HEALTHY' ? 'status-dot-ok' : (project.status === 'INACTIVE' ? 'status-dot-warning' : 'status-dot-unknown') %>">
+          <span class="sr-only"><%= project.status === 'ACTIVE_HEALTHY' ? 'Healthy' : (project.status === 'INACTIVE' ? 'Paused' : project.status) %></span>
+        </span>
+        <span class="text-sm text-fg truncate"><%= project.name %></span>
+      </div>
+      <div class="flex items-center gap-3 text-xs">
+        <span class="text-fg-faint"><%= project.region %></span>
+        <% if (project.status === 'INACTIVE') { %>
+          <span class="badge badge-building">Paused</span>
+        <% } %>
+      </div>
+    </div>
+  <% }) %>
+</div>

@@ -1,0 +1,6 @@
+<div class="py-6 text-center text-fg-faint text-sm" role="status">
+  <p><%= typeof message !== 'undefined' ? message : 'No data available' %></p>
+  <% if (typeof hint !== 'undefined') { %>
+    <p class="mt-1 text-xs"><%= hint %></p>
+  <% } %>
+</div>

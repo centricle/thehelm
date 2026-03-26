@@ -1,0 +1,30 @@
+<div class="space-y-3">
+  <% sites.forEach(site => { %>
+    <div class="space-y-1">
+      <div class="text-xs font-medium text-fg-muted"><%= site.name %></div>
+      <% if (site.error) { %>
+        <div class="text-xs text-error"><%= site.error %></div>
+      <% } else if (!site.deploys || site.deploys.length === 0) { %>
+        <div class="text-xs text-fg-faint">No recent deploys</div>
+      <% } else { %>
+        <% site.deploys.slice(0, 2).forEach(deploy => { %>
+          <div class="flex items-center justify-between py-1 text-xs">
+            <div class="flex items-center gap-2 min-w-0">
+              <% if (deploy.state === 'ready') { %>
+                <span class="badge badge-live">Live</span>
+              <% } else if (deploy.state === 'error') { %>
+                <span class="badge badge-failed">Failed</span>
+              <% } else if (deploy.state === 'building') { %>
+                <span class="badge badge-building">Building</span>
+              <% } else { %>
+                <span class="badge badge-ready"><%= deploy.state %></span>
+              <% } %>
+              <span class="text-fg-muted truncate"><%= deploy.title || 'No message' %></span>
+            </div>
+            <span class="text-fg-faint shrink-0 ml-2"><%= formatRelative(deploy.created_at) %></span>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  <% }) %>
+</div>

@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+@theme {
+  /* Primary: teal-steel — compass needle, wayfinding */
+  --color-primary: oklch(0.60 0.08 210);
+  --color-primary-hover: oklch(0.67 0.09 210);
+  --color-primary-muted: oklch(0.44 0.05 210);
+
+  /* Backgrounds: deep harbor — blue-slate with aqua undertone */
+  --color-bg-deep: oklch(0.13 0.059 229);
+  --color-bg: oklch(0.15 0.055 229);
+  --color-bg-surface: oklch(0.19 0.020 229);
+  --color-bg-elevated: oklch(0.23 0.042 229);
+
+  /* Foreground: salt-bleached */
+  --color-fg: oklch(0.91 0.008 210);
+  --color-fg-muted: oklch(0.58 0.008 215);
+  --color-fg-faint: oklch(0.38 0.006 219);
+
+  --color-border: oklch(0.27 0.035 229);
+  --color-border-subtle: oklch(0.22 0.030 229);
+
+  --color-success: oklch(0.62 0.10 155);
+  --color-error: oklch(0.58 0.12 25);
+  --color-warning: oklch(0.65 0.10 85);
+
+  /* Typography */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Monaco, "Cascadia Mono", monospace;
+}
+
+/* Harbor depth — base layer */
+body {
+  background-color: var(--color-bg-deep);
+}
+
+/* Ambient glow — deep water luminance */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse 100% 100% at 50% 35%,
+    oklch(0.25 0.03 210 / 0.40) 0%,
+    oklch(0.20 0.02 220 / 0.20) 45%,
+    transparent 80%
+  );
+}
+
+/* Texture grain — meandering chart lines via SVG displacement */
+#grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    repeating-linear-gradient(
+      160deg,
+      oklch(0.80 0.02 210 / 0.051) 0px,
+      oklch(0.80 0.02 210 / 0.051) 4px,
+      transparent 4px,
+      transparent 20px
+    );
+  filter: url(#chart-warp);
+}
+
+/* Content sits above texture */
+header, main, footer {
+  position: relative;
+  z-index: 2;
+}
+
+html {
+  font-size: 21px;
+  scroll-behavior: smooth;
+}
+
+/* Card component */
+.card {
+  @apply bg-bg-surface border border-border rounded-lg p-4;
+}
+
+/* Status indicators */
+.status-dot {
+  @apply inline-block w-3 h-3 rounded-full shrink-0;
+}
+
+.status-dot-ok { @apply bg-success; }
+.status-dot-error { @apply bg-error; }
+.status-dot-warning { @apply bg-warning; }
+.status-dot-unknown { @apply bg-fg-faint; }
+
+/* Spinner */
+.spinner {
+  @apply w-5 h-5 border-2 border-fg-faint rounded-full;
+  border-top-color: var(--color-primary);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Badges */
+.badge {
+  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-live { @apply bg-success/15 text-success; }
+.badge-failed { @apply bg-error/15 text-error; }
+.badge-building { @apply bg-warning/15 text-warning; }
+.badge-ready { @apply bg-primary/15 text-primary; }
+
+/* Staleness */
+.staleness-fresh { @apply text-success; }
+.staleness-aging { @apply text-warning; }
+.staleness-stale { @apply text-error; }
+
+/* HTMX loading indicator */
+.htmx-indicator {
+  display: none;
+}
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+  display: inline-flex;
+}
+
+/* Panel header */
+.panel-header {
+  @apply flex items-center justify-between mb-3;
+}
+
+.panel-title {
+  @apply text-sm font-semibold text-fg-muted uppercase tracking-wider;
+}
+
+/* Mobile nav */
+#mobile-menu {
+  transition: max-height 0.2s ease-out, opacity 0.2s ease-out;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+#mobile-menu.open {
+  max-height: 200px;
+  opacity: 1;
+}
+
+/* Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
