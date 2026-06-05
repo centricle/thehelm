@@ -15,7 +15,7 @@ One screen. Four panels. Your API tokens stay on your machine.
 
 - **Site Status** — HTTP HEAD checks with latency, live updates via SSE
 - **Recent Deploys** — Netlify deploy history per site
-- **Supabase Projects** — Database project health and status
+- **Database Projects** — Database project health and status (demo mode)
 - **Git Activity** — Latest commits, staleness, open issues (GitHub GraphQL)
 
 ## Quick start
@@ -55,7 +55,6 @@ HELM_GITHUB_REPOS=My App|owner/repo
 
 **API tokens:**
 - `NETLIFY_AUTH_TOKEN` — [Netlify personal access token](https://app.netlify.com/user/applications#personal-access-tokens)
-- `SUPABASE_ACCESS_TOKEN` — [Supabase access token](https://supabase.com/dashboard/account/tokens)
 - `GITHUB_TOKEN` — [GitHub PAT with repo scope](https://github.com/settings/tokens)
 
 Each panel works independently. Skip any token you don't need.
